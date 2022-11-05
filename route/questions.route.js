@@ -20,11 +20,17 @@ QuestionsRouter.post("/upload", async (req, res) => {
 QuestionsRouter.get("/getAll", async (req, res) => {
   try {
     const { category, difficulty, numberOfQuestions } = req.body;
-    const questions = await QuestionModel.find({
-      category: category,
-      difficulty: difficulty,
-      numberOfQuestions: numberOfQuestions,
-    });
+    let questions = [];
+    if (category && difficulty && numberOfQuestions) {
+      questions = await QuestionModel.find({
+        category: category,
+        difficulty: difficulty,
+        numberOfQuestions: numberOfQuestions,
+      });
+    } else {
+      questions = await QuestionModel.find({});
+    }
+
     return res.status(200).send({ type: "success", questions: questions });
   } catch (error) {
     console.log(error);
